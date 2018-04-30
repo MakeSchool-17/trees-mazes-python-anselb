@@ -57,8 +57,24 @@ class Maze:
     # Return cell neighbors within bounds of the maze
     # Use self.state to determine which neighbors should be included
     def cell_neighbors(self, cell):
-        # TODO: Logic for getting neighbors based on self.state
-        pass
+        # Logic for getting neighbors based on self.state
+        # Get the location of the current cell
+        x, y = self.x_y(cell)
+        neighbors_list = []
+        for direction in range(4):
+            # Find location of neighbor cell based on current cell
+            neighbor_x = x + COMPASS[direction][0]
+            neighbor_y = y + COMPASS[direction][1]
+            # If a cell is within the maze, get the index of that cell
+            if self.cell_in_bounds(neighbor_x, neighbor_y):
+                neighbor_cell = self.cell_index(neighbor_x, neighbor_y)
+                # If the maze is generating, and the all the neighbor's
+                # walls are still up, add the neighbor's cell index and
+                # relative cell location to the list of neighbors
+                if self.state == 'create':
+                    if not (self.maze_array[neighbor_cell] & WALL_BITS):
+                        neighbors_list.append((neighbor_cell, direction))
+        return neighbors_list
 
     # Connect two cells by knocking down the wall between them
     # Update wall bits of from_cell and to_cell
@@ -91,8 +107,8 @@ class Maze:
 
     # Check if x, y values of cell are within bounds of maze
     def cell_in_bounds(self, x, y):
-        return ((x >= 0) and (y >= 0) and (x < self.w_cells)
-                and (y < self.h_cells))
+        return ((x >= 0) and (y >= 0)
+                and (x < self.w_cells) and (y < self.h_cells))
 
     # Cell index from x, y values
     def cell_index(self, x, y):
