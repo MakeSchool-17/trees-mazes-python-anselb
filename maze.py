@@ -74,6 +74,8 @@ class Maze:
                 if self.state == 'create':
                     if not (self.maze_array[neighbor_cell] & WALL_BITS):
                         neighbors_list.append((neighbor_cell, direction))
+                # If the maze is getting solved, return all the neighbors that
+                # are accessible and unvisited
                 elif self.state == 'solve':
                     if not (self.maze_array[neighbor_cell] &
                             (BACKTRACK_BITS | SOLUTION_BITS)):
@@ -94,7 +96,14 @@ class Maze:
     # Visit a cell along a possible solution path
     # Update solution bits of from_cell and backtrack bits of to_cell
     def visit_cell(self, from_cell, to_cell, compass_index):
-        # TODO: Logic for updating cell bits
+        # Logic for updating cell bits
+        # Clear solution bits out of from_cell
+        self.maze_array[from_cell] &= ~SOLUTION_BITS
+        # Update solution bits in from_cell using WALLS[compass_index]
+        self.maze_array[from_cell] |= (WALLS[compass_index] << 8)
+        # Upate backtrack bits in to_cell using OPPOSITE_WALLS[compass_index]
+        self.maze_array[to_cell] |= (OPPOSITE_WALLS[compass_index] << 12)
+        # Updates maze visualization
         self.draw_visited_cell(from_cell)
 
     # Backtrack from cell
