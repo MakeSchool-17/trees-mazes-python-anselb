@@ -128,7 +128,28 @@ class Maze:
     # Reconstruct path to start using backtrack bits
     def reconstruct_solution(self, cell):
         self.draw_visited_cell(cell)
-        # TODO: Logic for reconstructing solution path in BFS
+        # Logic for reconstructing solution path in BFS
+        # Get the direction for the previous cell based on current cell bits
+        previous_cell_bits = (self.maze_array[cell] >> 12)
+        print(bin(previous_cell_bits))
+        try:
+            direction = WALLS.index(previous_cell_bits)
+        except ValueError:
+            print('ERROR - BACKTRACK BITS INVALID!')
+
+        # Calculate previous cell index using dirction towards previous cell
+        x, y = self.x_y(cell)
+        previous_x = x + COMPASS[direction][0]
+        previous_y = y + COMPASS[direction][1]
+        previous_cell = self.cell_index(previous_x, previous_y)
+
+        # Update solution bits of previous cell to point towards current cell
+        self.maze_array[previous_cell] |= (OPPOSITE_WALLS[direction] << 8)
+        self.refresh_maze_view()
+
+        # Reconstruct solution until reaching the start of maze
+        if previous_cell != 0:
+            self.reconstruct_solution(previous_cell)
 
     # Check if x, y values of cell are within bounds of maze
     def cell_in_bounds(self, x, y):
