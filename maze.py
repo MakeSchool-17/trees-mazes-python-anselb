@@ -119,7 +119,10 @@ class Maze:
     # Visit cell in BFS search
     # Update backtrack bits for use in reconstruct_solution
     def bfs_visit_cell(self, cell, from_compass_index):
-        # TODO: Logic for updating cell bits
+        # Logic for updating cell bits
+        # Set backtrack bits for cell to point towards the cell it came from
+        self.maze_array[cell] |= (OPPOSITE_WALLS[from_compass_index] << 12)
+        # Updates maze visualization
         self.draw_bfs_visited_cell(cell)
 
     # Reconstruct path to start using backtrack bits
