@@ -77,9 +77,10 @@ class Maze:
                 # If the maze is getting solved, return all the neighbors that
                 # are accessible and unvisited
                 elif self.state == 'solve':
-                    if not (self.maze_array[neighbor_cell] &
-                            (BACKTRACK_BITS | SOLUTION_BITS)):
-                        neighbors_list.append((neighbor_cell, direction))
+                    if (self.maze_array[cell] & WALLS[direction]):
+                        if not (self.maze_array[neighbor_cell] &
+                                (BACKTRACK_BITS | SOLUTION_BITS)):
+                            neighbors_list.append((neighbor_cell, direction))
         return neighbors_list
 
     # Connect two cells by knocking down the wall between them
