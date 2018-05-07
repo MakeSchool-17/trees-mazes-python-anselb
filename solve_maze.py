@@ -2,6 +2,7 @@ import maze
 import generate_maze
 import sys
 import random
+from collections import deque
 
 
 # Solve maze using Pre-Order DFS algorithm, terminate with solution
@@ -37,9 +38,30 @@ def solve_dfs(m):
 
 # Solve maze using BFS algorithm, terminate with solution
 def solve_bfs(m):
-    # TODO: Implement solve_bfs
-    pass
+    # Implement solve_bfs
+    cells_to_visit = deque()
+    current_cell = 0
+    in_direction = 0b0000
+    visited_cells = 0
+    cells_to_visit.append((current_cell, in_direction))
 
+    # Search for solution while current cell not at end cell
+    while current_cell != m.total_cells - 1 and len(cells_to_visit) > 0:
+        # Visit cells that are in the queue
+        current_cell, in_direction = cells_to_visit.popleft()
+        m.bfs_visit_cell(current_cell, in_direction)
+        visited_cells += 1
+        m.refresh_maze_view()
+
+        # Add all the current cell's neighbors to the queue
+        unvisited_neighbors = m.cell_neighbors(current_cell)
+        for neighbor in unvisited_neighbors:
+            cells_to_visit.append(neighbor)
+
+    # Follow path back to start to color the solution
+    m.reconstruct_solution(current_cell)
+    print('Maze solved')
+    m.state = 'idle'
 
 def print_solution_array(m):
     solution = m.solution_array()
