@@ -131,7 +131,6 @@ class Maze:
         # Logic for reconstructing solution path in BFS
         # Get the direction for the previous cell based on current cell bits
         previous_cell_bits = (self.maze_array[cell] >> 12)
-        print(bin(previous_cell_bits))
         try:
             direction = WALLS.index(previous_cell_bits)
         except ValueError:
