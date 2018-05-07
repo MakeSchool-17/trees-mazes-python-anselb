@@ -74,6 +74,10 @@ class Maze:
                 if self.state == 'create':
                     if not (self.maze_array[neighbor_cell] & WALL_BITS):
                         neighbors_list.append((neighbor_cell, direction))
+                elif self.state == 'solve':
+                    if not (self.maze_array[neighbor_cell] &
+                            (BACKTRACK_BITS | SOLUTION_BITS)):
+                        neighbors_list.append((neighbor_cell, direction))
         return neighbors_list
 
     # Connect two cells by knocking down the wall between them
